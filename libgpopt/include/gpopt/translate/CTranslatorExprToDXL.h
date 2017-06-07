@@ -384,9 +384,15 @@ namespace gpopt
 			
 			// translate a const table get into a result node
 			CDXLNode *PdxlnResultFromConstTableGet(CExpression *pexprCTG, DrgPcr *pdrgpcr, DrgPds *pdrgpdsBaseTables, ULONG *pulNonGatherMotions, BOOL *pfDML);
-
+			
+			// translate a const table get into a result node
+			CDXLNode *PdxlnResultFromConstTableGetBelowCTE(CExpression *pexprCTG, DrgPcr *pdrgpcr, DrgPds *pdrgpdsBaseTables, ULONG *pulNonGatherMotions, BOOL *pfDML);
+			
 			// translate a const table get into a result node
 			CDXLNode *PdxlnResultFromConstTableGet(CExpression *pexprCTG, DrgPcr *pdrgpcr, CExpression *pexprScalarCond);
+			
+			// translate a const table get into a result node
+			CDXLNode *PdxlnResultFromConstTableGetBelowCTE(CExpression *pexprCTG, DrgPcr *pdrgpcr, CExpression *pexprScalarCond);
 
 			// translate a table-valued function
 			CDXLNode *PdxlnTVF(CExpression *pexprTVF, DrgPcr *pdrgpcr, DrgPds *pdrgpdsBaseTables, ULONG *pulNonGatherMotions, BOOL *pfDML);
@@ -677,7 +683,14 @@ namespace gpopt
 				DrgPdatum *pdrgpdatumValues
 				);
 
-
+			// create a project list for a result node from a tuple of a
+			// const table get operator
+			CDXLNode *PdxlnProjListFromConstTableGetBelowCTE
+			(
+			 DrgPcr *pdrgpcrReqOutput,
+			 DrgPcr *pdrgpcrCTGOutput,
+			 DrgPdatum *pdrgpdatumValues
+			 );
 			// create a DXL project elem node from a proj element expression
 			CDXLNode *PdxlnProjElem(const CExpression *pexprProjElem);
 								

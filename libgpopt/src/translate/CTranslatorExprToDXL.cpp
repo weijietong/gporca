@@ -237,6 +237,7 @@ CTranslatorExprToDXL::InitPhysicalTranslators()
 			{COperator::EopPhysicalPartitionSelector, &gpopt::CTranslatorExprToDXL::PdxlnPartitionSelector},
 			{COperator::EopPhysicalPartitionSelectorDML, &gpopt::CTranslatorExprToDXL::PdxlnPartitionSelectorDML},
 			{COperator::EopPhysicalConstTableGet, &gpopt::CTranslatorExprToDXL::PdxlnResultFromConstTableGet},
+			{COperator::EopPhysicalConstTableGetBelowCTE, &gpopt::CTranslatorExprToDXL::PdxlnResultFromConstTableGetBelowCTE},
 			{COperator::EopPhysicalTVF, &gpopt::CTranslatorExprToDXL::PdxlnTVF},
 			{COperator::EopPhysicalSerialUnionAll, &gpopt::CTranslatorExprToDXL::PdxlnAppend},
 			{COperator::EopPhysicalParallelUnionAll, &gpopt::CTranslatorExprToDXL::PdxlnAppend},
@@ -2124,6 +2125,73 @@ CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 //		Create a DXL result node from an optimizer const table get node
 //---------------------------------------------------------------------------
 CDXLNode *
+CTranslatorExprToDXL::PdxlnResultFromConstTableGetBelowCTE
+(
+	CExpression *pexprCTG,
+	DrgPcr *pdrgpcr,
+	CExpression *pexprScalar
+	)
+{
+	GPOS_ASSERT(NULL != pexprCTG);
+	
+	CPhysicalConstTableGetBelowCTE *popCTG = CPhysicalConstTableGetBelowCTE::PopConvert(pexprCTG->Pop());
+	
+	// construct project list from the const table get values
+	DrgPcr *pdrgpcrCTGOutput = popCTG->PdrgpcrOutput();
+	DrgPdrgPdatum *pdrgpdrgdatum = popCTG->Pdrgpdrgpdatum();
+	
+	const ULONG ulRows = pdrgpdrgdatum->UlLength();
+	CDXLNode *pdxlnPrL = NULL;
+	CDXLNode *pdxlnOneTimeFilter = GPOS_NEW(m_pmp) CDXLNode(m_pmp, GPOS_NEW(m_pmp) CDXLScalarOneTimeFilter(m_pmp));
+	
+	DrgPdatum *pdrgpdatum = NULL;
+	if (0 == ulRows)
+	{
+		// no-tuples... only generate one row of NULLS and one-time "false" filter
+		pdrgpdatum = CTranslatorExprToDXLUtils::PdrgpdatumNulls(m_pmp, pdrgpcrCTGOutput);
+		
+		CExpression *pexprFalse = CUtils::PexprScalarConstBool(m_pmp, false /*fVal*/, false /*fNull*/);
+		CDXLNode *pdxlnFalse = PdxlnScConst(pexprFalse);
+		pexprFalse->Release();
+		
+		pdxlnOneTimeFilter->AddChild(pdxlnFalse);
+	}
+	else
+	{
+		// TODO:  - Feb 29, 2012; add support for CTGs with multiple rows
+		GPOS_ASSERT(1 == ulRows);
+		pdrgpdatum = (*pdrgpdrgdatum)[0];
+		pdrgpdatum->AddRef();
+		CDXLNode *pdxlnCond = NULL;
+		if (NULL != pexprScalar)
+		{
+			pdxlnCond = PdxlnScalar(pexprScalar);
+			pdxlnOneTimeFilter->AddChild(pdxlnCond);
+		}
+	}
+	
+	pdxlnPrL = PdxlnProjListFromConstTableGetBelowCTE(pdrgpcr, pdrgpcrCTGOutput, pdrgpdatum);
+	pdrgpdatum->Release();
+	
+	return CTranslatorExprToDXLUtils::PdxlnResult
+	(
+	 m_pmp,
+	 Pdxlprop(pexprCTG),
+	 pdxlnPrL,
+	 PdxlnFilter(NULL),
+	 pdxlnOneTimeFilter,
+	 NULL //pdxlnChild
+	 );
+}
+
+//---------------------------------------------------------------------------
+//	@function:
+//		CTranslatorExprToDXL::PdxlnResultFromConstTableGet
+//
+//	@doc:
+//		Create a DXL result node from an optimizer const table get node
+//---------------------------------------------------------------------------
+CDXLNode *
 CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 	(
 	CExpression *pexprCTG,
@@ -2134,6 +2202,26 @@ CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 	)
 {
 	return PdxlnResultFromConstTableGet(pexprCTG, pdrgpcr, NULL /*pexprScalarCond*/);
+}
+
+//---------------------------------------------------------------------------
+//	@function:
+//		CTranslatorExprToDXL::PdxlnResultFromConstTableGet
+//
+//	@doc:
+//		Create a DXL result node from an optimizer const table get node
+//---------------------------------------------------------------------------
+CDXLNode *
+CTranslatorExprToDXL::PdxlnResultFromConstTableGetBelowCTE
+(
+	CExpression *pexprCTG,
+	DrgPcr *pdrgpcr,
+	DrgPds *, // pdrgpdsBaseTables,
+	ULONG *, // pulNonGatherMotions,
+	BOOL * // pfDML
+)
+{
+	return PdxlnResultFromConstTableGetBelowCTE(pexprCTG, pdrgpcr, NULL /*pexprScalarCond*/);
 }
 
 //---------------------------------------------------------------------------
@@ -7527,6 +7615,75 @@ CTranslatorExprToDXL::PdxlnProjListFromConstTableGet
 	// cleanup
 	pcrsOutput->Release();
 
+	return pdxlnProjList;
+}
+
+
+//---------------------------------------------------------------------------
+//	@function:
+//		CTranslatorExprToDXL::PdxlnProjListFromConstTableGet
+//
+//	@doc:
+//		Construct a project list node by creating references to the columns
+//		of the given project list of the child node
+//
+//---------------------------------------------------------------------------
+CDXLNode *
+CTranslatorExprToDXL::PdxlnProjListFromConstTableGetBelowCTE
+(
+	DrgPcr *pdrgpcrReqOutput,
+	DrgPcr *pdrgpcrCTGOutput,
+	DrgPdatum *pdrgpdatumValues
+	)
+{
+	GPOS_ASSERT(NULL != pdrgpcrCTGOutput);
+	GPOS_ASSERT(NULL != pdrgpdatumValues);
+	GPOS_ASSERT(pdrgpcrCTGOutput->UlLength() == pdrgpdatumValues->UlLength());
+	
+	CDXLNode *pdxlnProjList = NULL;
+	CColRefSet *pcrsOutput = GPOS_NEW(m_pmp) CColRefSet(m_pmp);
+	pcrsOutput->Include(pdrgpcrCTGOutput);
+	
+	if (NULL != pdrgpcrReqOutput)
+	{
+		const ULONG ulArity = pdrgpcrReqOutput->UlLength();
+		DrgPdatum *pdrgpdatumOrdered = GPOS_NEW(m_pmp) DrgPdatum(m_pmp);
+		
+		for (ULONG ul = 0; ul < ulArity; ul++)
+		{
+			CColRef *pcr = (*pdrgpcrReqOutput)[ul];
+			ULONG ulPos = UlPosInArray(pcr, pdrgpcrCTGOutput);
+			GPOS_ASSERT(ulPos < pdrgpcrCTGOutput->UlLength());
+			IDatum *pdatum = (*pdrgpdatumValues)[ulPos];
+			pdatum->AddRef();
+			pdrgpdatumOrdered->Append(pdatum);
+			pcrsOutput->Exclude(pcr);
+		}
+		
+		pdxlnProjList = PdxlnProjListFromConstTableGetBelowCTE(NULL, pdrgpcrReqOutput, pdrgpdatumOrdered);
+		pdrgpdatumOrdered->Release();
+	}
+	else
+	{
+		pdxlnProjList = GPOS_NEW(m_pmp) CDXLNode(m_pmp, GPOS_NEW(m_pmp) CDXLScalarProjList(m_pmp));
+	}
+	
+	// construct project elements for columns which remained after processing the required list
+	CColRefSetIter crsi(*pcrsOutput);
+	while (crsi.FAdvance())
+	{
+		CColRef *pcr = crsi.Pcr();
+		ULONG ulPos = UlPosInArray(pcr, pdrgpcrCTGOutput);
+		GPOS_ASSERT(ulPos < pdrgpcrCTGOutput->UlLength());
+		IDatum *pdatum = (*pdrgpdatumValues)[ulPos];
+		CDXLScalarConstValue *pdxlopConstValue = pcr->Pmdtype()->PdxlopScConst(m_pmp, pdatum);
+		CDXLNode *pdxlnPrEl = PdxlnProjElem(pcr, GPOS_NEW(m_pmp) CDXLNode(m_pmp, pdxlopConstValue));
+		pdxlnProjList->AddChild(pdxlnPrEl);
+	}
+	
+	// cleanup
+	pcrsOutput->Release();
+	
 	return pdxlnProjList;
 }
 

@@ -95,9 +95,12 @@ namespace gpopt
 				GPOS_ASSERT(EopLogicalConstTableGetBelowCTE == pop->Eopid() ||
 							EopLogicalConstTableGet == pop->Eopid());
 				
-				return static_cast<CLogicalConstTableGetBelowCTE*>(pop);
+				return dynamic_cast<CLogicalConstTableGetBelowCTE*>(pop);
 			}
 
+			// return a copy of the operator with remapped columns
+			virtual
+			COperator *PopCopyWithRemappedColumns(IMemoryPool *pmp, HMUlCr *phmulcr, BOOL fMustExist);
 	}; // class CLogicalConstTableGetBelowCTE
 
 }

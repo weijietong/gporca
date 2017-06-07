@@ -1041,8 +1041,6 @@ CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
 		pdrgpdrgpdatum->AddRef();
 		COperator *popCTGBelowCTE = GPOS_NEW(pmp) CLogicalConstTableGetBelowCTE(pmp, pdrgpcoldesc, pdrgpdrgpdatum);
 		
-//		popCTG->Release();
-//		pexpr->Release();
 		return GPOS_NEW(pmp) CExpression(pmp, popCTGBelowCTE);
 	}
 	

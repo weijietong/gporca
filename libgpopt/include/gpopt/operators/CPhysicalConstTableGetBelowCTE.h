@@ -63,7 +63,6 @@ namespace gpopt
 			}
 		
 			// match function
-			virtual
 			BOOL FMatch(COperator *) const;
 
 			// derive distribution

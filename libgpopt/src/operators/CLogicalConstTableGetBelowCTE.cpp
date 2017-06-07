@@ -88,9 +88,6 @@ CLogicalConstTableGetBelowCTE::CLogicalConstTableGetBelowCTE
 //---------------------------------------------------------------------------
 CLogicalConstTableGetBelowCTE::~CLogicalConstTableGetBelowCTE()
 {
-//	CRefCount::SafeRelease(m_pdrgpcoldesc);
-//	CRefCount::SafeRelease(m_pdrgpdrgpdatum);
-//	CRefCount::SafeRelease(m_pdrgpcrOutput);
 }
 
 //---------------------------------------------------------------------------
@@ -113,7 +110,27 @@ CLogicalConstTableGetBelowCTE::PxfsCandidates
 	return pxfs;
 }
 
-
+COperator *
+CLogicalConstTableGetBelowCTE::PopCopyWithRemappedColumns
+(
+	IMemoryPool *pmp,
+	HMUlCr *phmulcr,
+	BOOL fMustExist
+	)
+{
+	DrgPcr *pdrgpcr = NULL;
+	if (fMustExist)
+	{
+		pdrgpcr = CUtils::PdrgpcrRemapAndCreate(pmp, m_pdrgpcrOutput, phmulcr);
+	}
+	else
+	{
+		pdrgpcr = CUtils::PdrgpcrRemap(pmp, m_pdrgpcrOutput, phmulcr, fMustExist);
+	}
+	m_pdrgpdrgpdatum->AddRef();
+	
+	return GPOS_NEW(pmp) CLogicalConstTableGetBelowCTE(pmp, pdrgpcr, m_pdrgpdrgpdatum);
+}
 
 
 // EOF
