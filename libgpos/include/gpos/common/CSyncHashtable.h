@@ -22,7 +22,6 @@
 
 #include "gpos/base.h"
 #include "gpos/sync/CAutoSpinlock.h"
-#include "gpopt/spinlock.h"
 #include "gpos/sync/CSpinlock.h"
 
 #include "gpos/common/CList.h"
