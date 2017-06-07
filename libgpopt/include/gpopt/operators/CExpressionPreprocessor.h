@@ -129,6 +129,9 @@ namespace gpopt
 			static
 			CExpression *PexprProjBelowSubquery(IMemoryPool *pmp, CExpression *pexpr, BOOL fUnderPrList);
 
+			static
+			CExpression *PexprReplaceConstTblGetWithConstTblGetBelowCTE(IMemoryPool *pmp, CExpression *pexpr, BOOL fFoundFullOuterJoin);
+
 			// collapse cascaded union/union all into an NAry union/union all operator
 			static
 			CExpression *PexprCollapseUnionUnionAll(IMemoryPool *pmp, CExpression *pexpr);

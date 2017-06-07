@@ -31,6 +31,10 @@ namespace gpopt
 	{
 
 		private:
+			// private copy ctor
+			CLogicalConstTableGet(const CLogicalConstTableGet &);
+		
+		protected:
 			// array of column descriptors: the schema of the const table
 			DrgPcoldesc *m_pdrgpcoldesc;
 		
@@ -39,10 +43,7 @@ namespace gpopt
 			
 			// output columns
 			DrgPcr *m_pdrgpcrOutput;
-			
-			// private copy ctor
-			CLogicalConstTableGet(const CLogicalConstTableGet &);
-			
+		
 			// construct column descriptors from column references
 			DrgPcoldesc *PdrgpcoldescMapping(IMemoryPool *pmp, DrgPcr *pdrgpcr)	const;
 
@@ -85,24 +86,28 @@ namespace gpopt
 			}
 			
 			// col descr accessor
+			virtual
 			DrgPcoldesc *Pdrgpcoldesc() const
 			{
 				return m_pdrgpcoldesc;
 			}
 			
 			// const table values accessor
+			virtual
 			DrgPdrgPdatum *Pdrgpdrgpdatum () const
 			{
 				return m_pdrgpdrgpdatum;
 			}
 			
 			// accessors
+			virtual
 			DrgPcr *PdrgpcrOutput() const
 			{
 				return m_pdrgpcrOutput;
 			}
 
 			// sensitivity to order of inputs
+			virtual
 			BOOL FInputOrderSensitive() const;
 
 			// operator specific hash function
@@ -211,7 +216,8 @@ namespace gpopt
 				)
 			{
 				GPOS_ASSERT(NULL != pop);
-				GPOS_ASSERT(EopLogicalConstTableGet == pop->Eopid());
+				GPOS_ASSERT(EopLogicalConstTableGet == pop->Eopid() ||
+							EopLogicalConstTableGetBelowCTE == pop->Eopid());
 				
 				return dynamic_cast<CLogicalConstTableGet*>(pop);
 			}

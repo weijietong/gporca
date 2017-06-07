@@ -993,6 +993,73 @@ CExpressionPreprocessor::PexprProjBelowSubquery
 
 //---------------------------------------------------------------------------
 //	@function:
+//		CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
+//
+//	@doc:
+//		Insert dummy project element below scalar subquery when the (a) the scalar
+//      subquery is below a project and (b) output column is an outer reference
+//---------------------------------------------------------------------------
+CExpression *
+CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
+(
+	IMemoryPool *pmp,
+	CExpression *pexpr,
+	BOOL fFoundFullOuterJoin
+)
+{
+	// protect against stack overflow during recursion
+	GPOS_CHECK_STACK_SIZE;
+	GPOS_ASSERT(NULL != pmp);
+	GPOS_ASSERT(NULL != pexpr);
+	
+	
+	
+	COperator *pop = pexpr->Pop();
+	const ULONG ulArity = pexpr->UlArity();
+	
+	if (pop->Eopid() == COperator::EopLogicalFullOuterJoin && !fFoundFullOuterJoin)
+	{
+		// current operator is not an inner-join, recursively process children
+		DrgPexpr *pdrgpexprChildren = GPOS_NEW(pmp) DrgPexpr(pmp);
+		for (ULONG ul = 0; ul < ulArity; ul++)
+		{
+			CExpression *pexprChild = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, (*pexpr)[ul], true);
+			pdrgpexprChildren->Append(pexprChild);
+		}
+		
+		pop->AddRef();
+		return GPOS_NEW(pmp) CExpression(pmp, pop, pdrgpexprChildren);
+	}
+	
+	if (pop->Eopid() == COperator::EopLogicalConstTableGet && fFoundFullOuterJoin)
+	{
+		CLogicalConstTableGet *popCTG = CLogicalConstTableGet::PopConvert(pop);
+		
+		DrgPcoldesc *pdrgpcoldesc = popCTG->Pdrgpcoldesc();
+		pdrgpcoldesc->AddRef();
+		DrgPdrgPdatum *pdrgpdrgpdatum = popCTG->Pdrgpdrgpdatum();
+		pdrgpdrgpdatum->AddRef();
+		COperator *popCTGBelowCTE = GPOS_NEW(pmp) CLogicalConstTableGetBelowCTE(pmp, pdrgpcoldesc, pdrgpdrgpdatum);
+		
+//		popCTG->Release();
+//		pexpr->Release();
+		return GPOS_NEW(pmp) CExpression(pmp, popCTGBelowCTE);
+	}
+	
+	// current operator is not an inner-join, recursively process children
+	DrgPexpr *pdrgpexprChildren = GPOS_NEW(pmp) DrgPexpr(pmp);
+	for (ULONG ul = 0; ul < ulArity; ul++)
+	{
+		CExpression *pexprChild = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, (*pexpr)[ul], false);
+		pdrgpexprChildren->Append(pexprChild);
+	}
+	
+	pop->AddRef();
+	return GPOS_NEW(pmp) CExpression(pmp, pop, pdrgpexprChildren);
+}
+
+//---------------------------------------------------------------------------
+//	@function:
 //		CExpressionPreprocessor::PexprCollapseUnionUnionAll
 //
 //	@doc:
@@ -2353,7 +2420,13 @@ CExpressionPreprocessor::PexprPreprocess
 	GPOS_CHECK_ABORT;
 	pexprCollapsedProjects->Release();
 
-	return pexprSubquery;
+	//return pexprSubquery;
+	// (23) replace constant table get with a specific version if it is under full outer join
+	CExpression *pexprReplacedConstTblGet = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, pexprSubquery, false);
+	GPOS_CHECK_ABORT;
+	pexprSubquery->Release();
+
+	return pexprReplacedConstTblGet;
 }
 
 // EOF
