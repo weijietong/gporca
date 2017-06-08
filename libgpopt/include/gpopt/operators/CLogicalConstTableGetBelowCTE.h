@@ -101,6 +101,7 @@ namespace gpopt
 			// return a copy of the operator with remapped columns
 			virtual
 			COperator *PopCopyWithRemappedColumns(IMemoryPool *pmp, HMUlCr *phmulcr, BOOL fMustExist);
+
 	}; // class CLogicalConstTableGetBelowCTE
 
 }
