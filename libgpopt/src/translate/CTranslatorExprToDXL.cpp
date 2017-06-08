@@ -237,7 +237,7 @@ CTranslatorExprToDXL::InitPhysicalTranslators()
 			{COperator::EopPhysicalPartitionSelector, &gpopt::CTranslatorExprToDXL::PdxlnPartitionSelector},
 			{COperator::EopPhysicalPartitionSelectorDML, &gpopt::CTranslatorExprToDXL::PdxlnPartitionSelectorDML},
 			{COperator::EopPhysicalConstTableGet, &gpopt::CTranslatorExprToDXL::PdxlnResultFromConstTableGet},
-			{COperator::EopPhysicalConstTableGetBelowCTE, &gpopt::CTranslatorExprToDXL::PdxlnResultFromConstTableGetBelowCTE},
+			{COperator::EopPhysicalConstTableGetBelowCTE, &gpopt::CTranslatorExprToDXL::PdxlnResultFromConstTableGet},
 			{COperator::EopPhysicalTVF, &gpopt::CTranslatorExprToDXL::PdxlnTVF},
 			{COperator::EopPhysicalSerialUnionAll, &gpopt::CTranslatorExprToDXL::PdxlnAppend},
 			{COperator::EopPhysicalParallelUnionAll, &gpopt::CTranslatorExprToDXL::PdxlnAppend},
@@ -2125,73 +2125,6 @@ CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 //		Create a DXL result node from an optimizer const table get node
 //---------------------------------------------------------------------------
 CDXLNode *
-CTranslatorExprToDXL::PdxlnResultFromConstTableGetBelowCTE
-(
-	CExpression *pexprCTG,
-	DrgPcr *pdrgpcr,
-	CExpression *pexprScalar
-	)
-{
-	GPOS_ASSERT(NULL != pexprCTG);
-	
-	CPhysicalConstTableGetBelowCTE *popCTG = CPhysicalConstTableGetBelowCTE::PopConvert(pexprCTG->Pop());
-	
-	// construct project list from the const table get values
-	DrgPcr *pdrgpcrCTGOutput = popCTG->PdrgpcrOutput();
-	DrgPdrgPdatum *pdrgpdrgdatum = popCTG->Pdrgpdrgpdatum();
-	
-	const ULONG ulRows = pdrgpdrgdatum->UlLength();
-	CDXLNode *pdxlnPrL = NULL;
-	CDXLNode *pdxlnOneTimeFilter = GPOS_NEW(m_pmp) CDXLNode(m_pmp, GPOS_NEW(m_pmp) CDXLScalarOneTimeFilter(m_pmp));
-	
-	DrgPdatum *pdrgpdatum = NULL;
-	if (0 == ulRows)
-	{
-		// no-tuples... only generate one row of NULLS and one-time "false" filter
-		pdrgpdatum = CTranslatorExprToDXLUtils::PdrgpdatumNulls(m_pmp, pdrgpcrCTGOutput);
-		
-		CExpression *pexprFalse = CUtils::PexprScalarConstBool(m_pmp, false /*fVal*/, false /*fNull*/);
-		CDXLNode *pdxlnFalse = PdxlnScConst(pexprFalse);
-		pexprFalse->Release();
-		
-		pdxlnOneTimeFilter->AddChild(pdxlnFalse);
-	}
-	else
-	{
-		// TODO:  - Feb 29, 2012; add support for CTGs with multiple rows
-		GPOS_ASSERT(1 == ulRows);
-		pdrgpdatum = (*pdrgpdrgdatum)[0];
-		pdrgpdatum->AddRef();
-		CDXLNode *pdxlnCond = NULL;
-		if (NULL != pexprScalar)
-		{
-			pdxlnCond = PdxlnScalar(pexprScalar);
-			pdxlnOneTimeFilter->AddChild(pdxlnCond);
-		}
-	}
-	
-	pdxlnPrL = PdxlnProjListFromConstTableGetBelowCTE(pdrgpcr, pdrgpcrCTGOutput, pdrgpdatum);
-	pdrgpdatum->Release();
-	
-	return CTranslatorExprToDXLUtils::PdxlnResult
-	(
-	 m_pmp,
-	 Pdxlprop(pexprCTG),
-	 pdxlnPrL,
-	 PdxlnFilter(NULL),
-	 pdxlnOneTimeFilter,
-	 NULL //pdxlnChild
-	 );
-}
-
-//---------------------------------------------------------------------------
-//	@function:
-//		CTranslatorExprToDXL::PdxlnResultFromConstTableGet
-//
-//	@doc:
-//		Create a DXL result node from an optimizer const table get node
-//---------------------------------------------------------------------------
-CDXLNode *
 CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 	(
 	CExpression *pexprCTG,
@@ -2202,26 +2135,6 @@ CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 	)
 {
 	return PdxlnResultFromConstTableGet(pexprCTG, pdrgpcr, NULL /*pexprScalarCond*/);
-}
-
-//---------------------------------------------------------------------------
-//	@function:
-//		CTranslatorExprToDXL::PdxlnResultFromConstTableGet
-//
-//	@doc:
-//		Create a DXL result node from an optimizer const table get node
-//---------------------------------------------------------------------------
-CDXLNode *
-CTranslatorExprToDXL::PdxlnResultFromConstTableGetBelowCTE
-(
-	CExpression *pexprCTG,
-	DrgPcr *pdrgpcr,
-	DrgPds *, // pdrgpdsBaseTables,
-	ULONG *, // pulNonGatherMotions,
-	BOOL * // pfDML
-)
-{
-	return PdxlnResultFromConstTableGetBelowCTE(pexprCTG, pdrgpcr, NULL /*pexprScalarCond*/);
 }
 
 //---------------------------------------------------------------------------

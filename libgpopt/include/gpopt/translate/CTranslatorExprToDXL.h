@@ -386,13 +386,7 @@ namespace gpopt
 			CDXLNode *PdxlnResultFromConstTableGet(CExpression *pexprCTG, DrgPcr *pdrgpcr, DrgPds *pdrgpdsBaseTables, ULONG *pulNonGatherMotions, BOOL *pfDML);
 			
 			// translate a const table get into a result node
-			CDXLNode *PdxlnResultFromConstTableGetBelowCTE(CExpression *pexprCTG, DrgPcr *pdrgpcr, DrgPds *pdrgpdsBaseTables, ULONG *pulNonGatherMotions, BOOL *pfDML);
-			
-			// translate a const table get into a result node
 			CDXLNode *PdxlnResultFromConstTableGet(CExpression *pexprCTG, DrgPcr *pdrgpcr, CExpression *pexprScalarCond);
-			
-			// translate a const table get into a result node
-			CDXLNode *PdxlnResultFromConstTableGetBelowCTE(CExpression *pexprCTG, DrgPcr *pdrgpcr, CExpression *pexprScalarCond);
 
 			// translate a table-valued function
 			CDXLNode *PdxlnTVF(CExpression *pexprTVF, DrgPcr *pdrgpcr, DrgPds *pdrgpdsBaseTables, ULONG *pulNonGatherMotions, BOOL *pfDML);
