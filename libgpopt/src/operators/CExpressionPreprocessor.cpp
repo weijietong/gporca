@@ -996,8 +996,12 @@ CExpressionPreprocessor::PexprProjBelowSubquery
 //		CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
 //
 //	@doc:
-//		Insert dummy project element below scalar subquery when the (a) the scalar
-//      subquery is below a project and (b) output column is an outer reference
+//		Replace ConstTableGet with ConstTableGetBelowCTE if its
+//      below Full Outer Join. During Full Outer Join Xform processing, the
+//      Child Expression are pushed under CTE Producer and in case of constant
+//      table since the distribution spec is universal we may try to pull up the
+//      inner child to the master but the Producer may not be in master so we may
+//      result in a wrong plan
 //---------------------------------------------------------------------------
 CExpression *
 CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
@@ -1020,7 +1024,6 @@ CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
 	if (pop->Eopid() == COperator::EopLogicalFullOuterJoin && !fFoundFullOuterJoin)
 	{
 		fFoundFullOuterJoin = true;
-		// current operator is not an inner-join, recursively process children
 		DrgPexpr *pdrgpexprChildren = GPOS_NEW(pmp) DrgPexpr(pmp);
 		for (ULONG ul = 0; ul < ulArity; ul++)
 		{
@@ -1035,6 +1038,7 @@ CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
 	
 	if (pop->Eopid() == COperator::EopLogicalConstTableGet && fFoundFullOuterJoin)
 	{
+		// replace const table get
 		CLogicalConstTableGet *popCTG = CLogicalConstTableGet::PopConvert(pop);
 		
 		DrgPcoldesc *pdrgpcoldesc = popCTG->Pdrgpcoldesc();
@@ -1046,7 +1050,7 @@ CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
 		return GPOS_NEW(pmp) CExpression(pmp, popCTGBelowCTE);
 	}
 	
-	// current operator is not an inner-join, recursively process children
+	// current operator is not a full outer join, recursively process children
 	DrgPexpr *pdrgpexprChildren = GPOS_NEW(pmp) DrgPexpr(pmp);
 	for (ULONG ul = 0; ul < ulArity; ul++)
 	{
@@ -2420,8 +2424,7 @@ CExpressionPreprocessor::PexprPreprocess
 	GPOS_CHECK_ABORT;
 	pexprCollapsedProjects->Release();
 
-	//return pexprSubquery;
-	// (23) replace constant table get with a specific version if it is under full outer join
+	// (24) replace constant table get with a different version of constant with replicated distribution if its under full outer join
 	CExpression *pexprReplacedConstTblGet = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, pexprSubquery, false);
 	GPOS_CHECK_ABORT;
 	pexprSubquery->Release();
