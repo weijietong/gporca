@@ -677,6 +677,7 @@ namespace gpopt
 				DrgPdatum *pdrgpdatumValues
 				);
 
+
 			// create a DXL project elem node from a proj element expression
 			CDXLNode *PdxlnProjElem(const CExpression *pexprProjElem);
 								
