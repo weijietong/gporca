@@ -129,6 +129,7 @@ namespace gpopt
 			static
 			CExpression *PexprProjBelowSubquery(IMemoryPool *pmp, CExpression *pexpr, BOOL fUnderPrList);
 
+			// replace constant table get with a different version of constant table object having replicated distribution spec
 			static
 			CExpression *PexprReplaceConstTblGetWithConstTblGetBelowCTE(IMemoryPool *pmp, CExpression *pexpr, BOOL fFoundFullOuterJoin);
 

@@ -86,28 +86,24 @@ namespace gpopt
 			}
 			
 			// col descr accessor
-			virtual
 			DrgPcoldesc *Pdrgpcoldesc() const
 			{
 				return m_pdrgpcoldesc;
 			}
 			
 			// const table values accessor
-			virtual
 			DrgPdrgPdatum *Pdrgpdrgpdatum () const
 			{
 				return m_pdrgpdrgpdatum;
 			}
 			
 			// accessors
-			virtual
 			DrgPcr *PdrgpcrOutput() const
 			{
 				return m_pdrgpcrOutput;
 			}
 
 			// sensitivity to order of inputs
-			virtual
 			BOOL FInputOrderSensitive() const;
 
 			// operator specific hash function
@@ -216,8 +212,7 @@ namespace gpopt
 				)
 			{
 				GPOS_ASSERT(NULL != pop);
-				GPOS_ASSERT(EopLogicalConstTableGet == pop->Eopid() ||
-							EopLogicalConstTableGetBelowCTE == pop->Eopid());
+				GPOS_ASSERT(EopLogicalConstTableGet == pop->Eopid());
 				
 				return dynamic_cast<CLogicalConstTableGet*>(pop);
 			}
