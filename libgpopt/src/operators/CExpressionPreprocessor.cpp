@@ -1019,15 +1019,17 @@ CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
 	
 	if (pop->Eopid() == COperator::EopLogicalFullOuterJoin && !fFoundFullOuterJoin)
 	{
+		fFoundFullOuterJoin = true;
 		// current operator is not an inner-join, recursively process children
 		DrgPexpr *pdrgpexprChildren = GPOS_NEW(pmp) DrgPexpr(pmp);
 		for (ULONG ul = 0; ul < ulArity; ul++)
 		{
-			CExpression *pexprChild = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, (*pexpr)[ul], true);
+			CExpression *pexprChild = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, (*pexpr)[ul], fFoundFullOuterJoin);
 			pdrgpexprChildren->Append(pexprChild);
 		}
 		
 		pop->AddRef();
+		fFoundFullOuterJoin = false;
 		return GPOS_NEW(pmp) CExpression(pmp, pop, pdrgpexprChildren);
 	}
 	
@@ -1048,7 +1050,7 @@ CExpressionPreprocessor::PexprReplaceConstTblGetWithConstTblGetBelowCTE
 	DrgPexpr *pdrgpexprChildren = GPOS_NEW(pmp) DrgPexpr(pmp);
 	for (ULONG ul = 0; ul < ulArity; ul++)
 	{
-		CExpression *pexprChild = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, (*pexpr)[ul], false);
+		CExpression *pexprChild = PexprReplaceConstTblGetWithConstTblGetBelowCTE(pmp, (*pexpr)[ul], fFoundFullOuterJoin);
 		pdrgpexprChildren->Append(pexprChild);
 	}
 	
