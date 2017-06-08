@@ -136,7 +136,6 @@ CJobGroupExpressionExploration::ScheduleApplicableTransformations
 
 	// get all applicable xforms
 	COperator *pop = m_pgexpr->Pop();
-	
 	CXformSet *pxfs = CLogical::PopConvert(pop)->PxfsCandidates(psc->PmpGlobal());
 
 	// intersect them with required xforms and schedule jobs

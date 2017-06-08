@@ -14,7 +14,6 @@
 
 #include "gpopt/operators/CExpressionHandle.h"
 #include "gpopt/operators/CLogicalConstTableGetBelowCTE.h"
-#include "gpopt/operators/CLogicalConstTableGet.h"
 #include "gpopt/metadata/CName.h"
 #include "gpopt/base/CColRefSet.h"
 #include "gpopt/base/CColRefTable.h"
@@ -110,6 +109,14 @@ CLogicalConstTableGetBelowCTE::PxfsCandidates
 	return pxfs;
 }
 
+//---------------------------------------------------------------------------
+//	@function:
+//		CLogicalConstTableGetBelowCTE::PopCopyWithRemappedColumns
+//
+//	@doc:
+//		Return a copy of the operator with remapped columns
+//
+//---------------------------------------------------------------------------
 COperator *
 CLogicalConstTableGetBelowCTE::PopCopyWithRemappedColumns
 (
