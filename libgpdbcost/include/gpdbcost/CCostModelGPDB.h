@@ -134,10 +134,6 @@ namespace gpdbcost
 			// cost of const table get
 			static
 			CCost CostConstTableGet(IMemoryPool *pmp, CExpressionHandle &exprhdl, const CCostModelGPDB *pcmgpdb, const SCostingInfo *pci);
-		
-			// cost of const table get
-			static
-			CCost CostConstTableGetBelowCTE(IMemoryPool *pmp, CExpressionHandle &exprhdl, const CCostModelGPDB *pcmgpdb, const SCostingInfo *pci);
 
 			// cost of DML
 			static

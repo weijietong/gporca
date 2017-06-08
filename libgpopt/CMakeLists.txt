@@ -291,7 +291,7 @@ add_library(gpopt
             src/operators/CLogicalBitmapTableGet.cpp
             include/gpopt/operators/CLogicalConstTableGet.h
             src/operators/CLogicalConstTableGet.cpp
-	    include/gpopt/operators/CLogicalConstTableGetBelowCTE.h
+            include/gpopt/operators/CLogicalConstTableGetBelowCTE.h
             src/operators/CLogicalConstTableGetBelowCTE.cpp
             include/gpopt/operators/CLogicalCTEAnchor.h
             src/operators/CLogicalCTEAnchor.cpp
@@ -421,7 +421,7 @@ add_library(gpopt
             src/operators/CPhysicalComputeScalar.cpp
             include/gpopt/operators/CPhysicalConstTableGet.h
             src/operators/CPhysicalConstTableGet.cpp
-	    include/gpopt/operators/CPhysicalConstTableGetBelowCTE.h
+            include/gpopt/operators/CPhysicalConstTableGetBelowCTE.h
             src/operators/CPhysicalConstTableGetBelowCTE.cpp
             include/gpopt/operators/CPhysicalCTEConsumer.h
             src/operators/CPhysicalCTEConsumer.cpp
@@ -723,7 +723,7 @@ add_library(gpopt
             src/xforms/CXformImplementBitmapTableGet.cpp
             include/gpopt/xforms/CXformImplementConstTableGet.h
             src/xforms/CXformImplementConstTableGet.cpp
-	    include/gpopt/xforms/CXformImplementConstTableGetBelowCTE.h
+            include/gpopt/xforms/CXformImplementConstTableGetBelowCTE.h
             src/xforms/CXformImplementConstTableGetBelowCTE.cpp
             include/gpopt/xforms/CXformImplementCTEConsumer.h
             src/xforms/CXformImplementCTEConsumer.cpp

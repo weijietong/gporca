@@ -50,7 +50,7 @@ const CCostModelGPDB::SCostMapping CCostModelGPDB::m_rgcm[] =
 	{COperator::EopPhysicalCTEProducer, CostCTEProducer},
 	{COperator::EopPhysicalCTEConsumer, CostCTEConsumer},
 	{COperator::EopPhysicalConstTableGet, CostConstTableGet},
-	{COperator::EopPhysicalConstTableGetBelowCTE, CostConstTableGetBelowCTE},
+	{COperator::EopPhysicalConstTableGetBelowCTE, CostConstTableGet},
 	{COperator::EopPhysicalDML, CostDML},
 
 	{COperator::EopPhysicalHashAgg, CostHashAgg},
@@ -491,37 +491,9 @@ CCostModelGPDB::CostConstTableGet
 {
 	GPOS_ASSERT(NULL != pcmgpdb);
 	GPOS_ASSERT(NULL != pci);
-	GPOS_ASSERT(COperator::EopPhysicalConstTableGet == exprhdl.Pop()->Eopid());
+	GPOS_ASSERT(COperator::EopPhysicalConstTableGet == exprhdl.Pop()->Eopid() ||
+				COperator::EopPhysicalConstTableGetBelowCTE == exprhdl.Pop()->Eopid());
 
-	return CCost(pci->DRebinds() * CostTupleProcessing(pci->DRows(), pci->DWidth(), pcmgpdb->Pcp()).DVal());
-}
-
-
-//---------------------------------------------------------------------------
-//	@function:
-//		CCostModelGPDB::CostConstTableGet
-//
-//	@doc:
-//		Cost of const table get
-//
-//---------------------------------------------------------------------------
-CCost
-CCostModelGPDB::CostConstTableGetBelowCTE
-(
-	IMemoryPool *, // pmp
-	CExpressionHandle &
-#ifdef GPOS_DEBUG
- exprhdl
-#endif // GPOS_DEBUG
-	,
-	const CCostModelGPDB *pcmgpdb,
-	const SCostingInfo *pci
-	)
-{
-	GPOS_ASSERT(NULL != pcmgpdb);
-	GPOS_ASSERT(NULL != pci);
-	GPOS_ASSERT(COperator::EopPhysicalConstTableGetBelowCTE == exprhdl.Pop()->Eopid());
-	
 	return CCost(pci->DRebinds() * CostTupleProcessing(pci->DRows(), pci->DWidth(), pcmgpdb->Pcp()).DVal());
 }
 

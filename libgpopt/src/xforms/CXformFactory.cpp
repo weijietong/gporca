@@ -154,7 +154,6 @@ CXformFactory::Instantiate()
 	Add(GPOS_NEW(m_pmp) CXformDynamicIndexGet2DynamicIndexScan(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformImplementSequence(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformImplementConstTableGet(m_pmp));
-	Add(GPOS_NEW(m_pmp) CXformImplementConstTableGetBelowCTE(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformUnnestTVF(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformImplementTVF(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformImplementTVFNoArgs(m_pmp));
@@ -284,6 +283,7 @@ CXformFactory::Instantiate()
 	Add(GPOS_NEW(m_pmp) CXformInnerJoinWithInnerSelect2DynamicBitmapIndexGetApply(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformGbAggWithMDQA2Join(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformCollapseProject(m_pmp));
+	Add(GPOS_NEW(m_pmp) CXformImplementConstTableGetBelowCTE(m_pmp));
 	
 	GPOS_ASSERT(NULL != m_rgpxf[CXform::ExfSentinel - 1] &&
 				"Not all xforms have been instantiated");

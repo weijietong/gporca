@@ -80,7 +80,6 @@ namespace gpopt
 				ExfDynamicIndexGet2DynamicIndexScan,
 				ExfImplementSequence,
 				ExfImplementConstTableGet,
-				ExfImplementConstTableGetBelowCTE,
 				ExfUnnestTVF,
 				ExfImplementTVF,
 				ExfImplementTVFNoArgs,
@@ -210,6 +209,7 @@ namespace gpopt
 				ExfInnerJoinWithInnerSelect2DynamicBitmapIndexGetApply,
 				ExfGbAggWithMDQA2Join,
 				ExfCollapseProject,
+				ExfImplementConstTableGetBelowCTE,
 				ExfInvalid,
 				ExfSentinel = ExfInvalid
 			};
