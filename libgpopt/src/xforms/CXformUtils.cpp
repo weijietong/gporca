@@ -751,7 +751,7 @@ CXformUtils::FSameDatatype
 //
 //		Example:
 //			For 'exists(select * from r where a = 10)', we produce the following:
-//			New Subquery: (select count(*) as cc from r where a = 10)
+//			New Subquery: (select count(*) as cc from r where a = 10 limit 1)
 //			New Scalar: cc > 0
 //
 //---------------------------------------------------------------------------
