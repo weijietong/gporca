@@ -1110,8 +1110,10 @@ CLogical::Maxcard
 	CExpression *pexprScalar = exprhdl.PexprScalarChild(ulScalarIndex);
 
 	if (NULL != pexprScalar &&
-		( (CUtils::FScalarConstFalse(pexprScalar) && (COperator::EopLogicalFullOuterJoin != exprhdl.Pop()->Eopid()))||
-		CDrvdPropRelational::Pdprel(exprhdl.Pdp())->Ppc()->FContradiction()))
+		( (CUtils::FScalarConstFalse(pexprScalar) &&
+				(COperator::EopLogicalFullOuterJoin != exprhdl.Pop()->Eopid() &&
+						COperator::EopLogicalLeftOuterJoin != exprhdl.Pop()->Eopid()))
+		|| CDrvdPropRelational::Pdprel(exprhdl.Pdp())->Ppc()->FContradiction()))
 	{
 		return CMaxCard(0 /*ull*/);
 	}
