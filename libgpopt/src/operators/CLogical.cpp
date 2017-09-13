@@ -1106,7 +1106,7 @@ CLogical::Maxcard
 	CMaxCard maxcard
 	)
 {
-	// in case of a false condition (when the operator is not Full Outer Join) or a contradiction, maxcard should be zero
+	// in case of a false condition (when the operator is not Full / Left Outer Join) or a contradiction, maxcard should be zero
 	CExpression *pexprScalar = exprhdl.PexprScalarChild(ulScalarIndex);
 
 	if (NULL != pexprScalar &&
