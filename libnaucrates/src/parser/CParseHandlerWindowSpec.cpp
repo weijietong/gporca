@@ -16,7 +16,6 @@
 #include "naucrates/dxl/parser/CParseHandlerSortColList.h"
 #include "naucrates/dxl/operators/CDXLOperatorFactory.h"
 #include "naucrates/dxl/parser/CParseHandlerFactory.h"
-#include "gpos/error/CAutoTrace.h"
 using namespace gpdxl;
 
 XERCES_CPP_NAMESPACE_USE
@@ -138,11 +137,6 @@ CParseHandlerWindowSpec::EndElement
 
 	// window frame associated with the window key
 	CDXLWindowFrame *pdxlwf =  NULL;
-
-	{
-		CAutoTrace at(m_pmp);
-		at.Os() << this->UlLength();
-	}
 
 	if (1 == this->UlLength())
 	{
