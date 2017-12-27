@@ -326,6 +326,8 @@ add_library(gpopt
             src/operators/CLogicalInnerCorrelatedApply.cpp
             include/gpopt/operators/CLogicalInnerIndexApply.h
             src/operators/CLogicalInnerIndexApply.cpp
+            include/gpopt/operators/CLogicalLeftOuterIndexApply.h
+            src/operators/CLogicalLeftOuterIndexApply.cpp
             include/gpopt/operators/CLogicalInnerJoin.h
             src/operators/CLogicalInnerJoin.cpp
             include/gpopt/operators/CLogicalInsert.h
@@ -454,6 +456,8 @@ add_library(gpopt
             src/operators/CPhysicalLeftAntiSemiHashJoinNotIn.cpp
             include/gpopt/operators/CPhysicalLeftAntiSemiNLJoin.h
             src/operators/CPhysicalLeftAntiSemiNLJoin.cpp
+            include/gpopt/operators/CPhysicalLeftOuterIndexNLJoin.h
+            src/operators/CPhysicalLeftOuterIndexNLJoin.cpp
             include/gpopt/operators/CPhysicalLeftOuterHashJoin.h
             src/operators/CPhysicalLeftOuterHashJoin.cpp
             include/gpopt/operators/CPhysicalLeftOuterNLJoin.h
@@ -724,6 +728,8 @@ add_library(gpopt
             src/xforms/CXformImplementDynamicBitmapTableGet.cpp
             include/gpopt/xforms/CXformImplementInnerIndexApply.h
             src/xforms/CXformImplementInnerIndexApply.cpp
+            include/gpopt/xforms/CXformImplementLeftOuterIndexApply.h
+            src/xforms/CXformImplementLeftOuterIndexApply.cpp
             include/gpopt/xforms/CXformImplementLimit.h
             src/xforms/CXformImplementLimit.cpp
             include/gpopt/xforms/CXformImplementPartitionSelector.h
@@ -766,6 +772,8 @@ add_library(gpopt
             src/xforms/CXformInnerJoin2IndexApply.cpp
             include/gpopt/xforms/CXformInnerJoin2IndexGetApply.h
             src/xforms/CXformInnerJoin2IndexGetApply.cpp
+            include/gpopt/xforms/CXformLeftOuterJoin2IndexGetApply.h
+            src/xforms/CXformLeftOuterJoin2IndexGetApply.cpp
             include/gpopt/xforms/CXformInnerJoin2NLJoin.h
             src/xforms/CXformInnerJoin2NLJoin.cpp
             include/gpopt/xforms/CXformInnerJoin2PartialDynamicIndexGetApply.h

@@ -301,7 +301,7 @@ CXformInnerJoin2IndexApply::CreateAlternativesForBtreeIndex
 			GPOS_NEW(pmp) CExpression
 				(
 				pmp,
-				GPOS_NEW(pmp) CLogicalInnerIndexApply(pmp, pdrgpcr),
+				GPOS_NEW(pmp) CLogicalLeftOuterIndexApply(pmp, pdrgpcr),
 				pexprOuter,
 				pexprLogicalIndexGet,
 				CPredicateUtils::PexprConjunction(pmp, NULL /*pdrgpexpr*/)

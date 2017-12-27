@@ -189,6 +189,8 @@ CXformFactory::Instantiate()
 	Add(GPOS_NEW(m_pmp) CXformLeftAntiSemiApplyNotIn2LeftAntiSemiJoinNotInNoCorrelations(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformPushDownLeftOuterJoin (m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformSimplifyLeftOuterJoin (m_pmp));
+	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoin2IndexGetApply(m_pmp));
+	Add(GPOS_NEW(m_pmp) CXformImplementLeftOuterIndexApply(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoin2NLJoin(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoin2HashJoin(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformLeftSemiJoin2NLJoin(m_pmp));

@@ -74,6 +74,7 @@ const CCostModelGPDB::SCostMapping CCostModelGPDB::m_rgcm[] =
 	{COperator::EopPhysicalLeftOuterHashJoin, CostHashJoin},
 
 	{COperator::EopPhysicalInnerIndexNLJoin, CostInnerIndexNLJoin},
+	{COperator::EopPhysicalLeftOuterIndexNLJoin, CostInnerIndexNLJoin},
 
 	{COperator::EopPhysicalMotionGather, CostMotion},
 	{COperator::EopPhysicalMotionBroadcast, CostMotion},
@@ -956,7 +957,7 @@ CCostModelGPDB::CostInnerIndexNLJoin
 {
 	GPOS_ASSERT(NULL != pcmgpdb);
 	GPOS_ASSERT(NULL != pci);
-	GPOS_ASSERT	(COperator::EopPhysicalInnerIndexNLJoin == exprhdl.Pop()->Eopid());
+//	GPOS_ASSERT	(COperator::EopPhysicalInnerIndexNLJoin == exprhdl.Pop()->Eopid());
 
 	const DOUBLE dRowsOuter = pci->PdRows()[0];
 	const DOUBLE dWidthOuter = pci->PdWidth()[0];

@@ -212,6 +212,7 @@ CTranslatorExprToDXL::InitPhysicalTranslators()
 			{COperator::EopPhysicalSequenceProject, &gpopt::CTranslatorExprToDXL::PdxlnWindow},
 			{COperator::EopPhysicalInnerNLJoin, &gpopt::CTranslatorExprToDXL::PdxlnNLJoin},
 			{COperator::EopPhysicalInnerIndexNLJoin, &gpopt::CTranslatorExprToDXL::PdxlnNLJoin},
+			{COperator::EopPhysicalLeftOuterIndexNLJoin, &gpopt::CTranslatorExprToDXL::PdxlnNLJoin},
 			{COperator::EopPhysicalCorrelatedInnerNLJoin, &gpopt::CTranslatorExprToDXL::PdxlnCorrelatedNLJoin},
 			{COperator::EopPhysicalLeftOuterNLJoin, &gpopt::CTranslatorExprToDXL::PdxlnNLJoin},
 			{COperator::EopPhysicalCorrelatedLeftOuterNLJoin, &gpopt::CTranslatorExprToDXL::PdxlnCorrelatedNLJoin},
@@ -3594,7 +3595,18 @@ CTranslatorExprToDXL::StoreIndexNLJOuterRefs
 	CPhysical *pop
 	)
 {
-	DrgPcr *pdrgpcr = CPhysicalInnerIndexNLJoin::PopConvert(pop)->PdrgPcrOuterRefs();
+	DrgPcr *pdrgpcr = NULL;
+
+	if (COperator::EopPhysicalInnerIndexNLJoin == pop->Eopid())
+	{
+		pdrgpcr = CPhysicalInnerIndexNLJoin::PopConvert(pop)->PdrgPcrOuterRefs();
+	}
+	else
+	{
+		pdrgpcr = CPhysicalLeftOuterIndexNLJoin::PopConvert(pop)->PdrgPcrOuterRefs();
+	}
+	GPOS_ASSERT(pdrgpcr != NULL);
+
 	const ULONG ulSize = pdrgpcr->UlLength();
 	for (ULONG ul = 0; ul < ulSize; ul++)
 	{
@@ -3649,7 +3661,9 @@ CTranslatorExprToDXL::PdxlnNLJoin
 	CDrvdPropRelational *pdprelInner =
 			CDrvdPropRelational::Pdprel(pexprInnerChild->Pdp(CDrvdProp::EptRelational));
 
-	GPOS_ASSERT_IMP(COperator::EopPhysicalInnerIndexNLJoin != pop->Eopid(), pdprelInner->PcrsOuter()->FDisjoint(pdprelOuter->PcrsOutput()) &&
+	GPOS_ASSERT_IMP(COperator::EopPhysicalInnerIndexNLJoin != pop->Eopid() &&
+					COperator::EopPhysicalLeftOuterIndexNLJoin != pop->Eopid()
+			, pdprelInner->PcrsOuter()->FDisjoint(pdprelOuter->PcrsOutput()) &&
 			"detected outer references in NL inner child");
 #endif // GPOS_DEBUG
 
@@ -3663,6 +3677,12 @@ CTranslatorExprToDXL::PdxlnNLJoin
 
 		case COperator::EopPhysicalInnerIndexNLJoin:
 			edxljt = EdxljtInner;
+			fIndexNLJ = true;
+			StoreIndexNLJOuterRefs(pop);
+			break;
+
+		case COperator::EopPhysicalLeftOuterIndexNLJoin:
+			edxljt = EdxljtLeft;
 			fIndexNLJ = true;
 			StoreIndexNLJOuterRefs(pop);
 			break;
