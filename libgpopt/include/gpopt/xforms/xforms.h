@@ -130,6 +130,7 @@
 #include "gpopt/xforms/CXformInnerApply2InnerJoin.h"
 #include "gpopt/xforms/CXformInnerApply2InnerJoinNoCorrelations.h"
 #include "gpopt/xforms/CXformImplementInnerCorrelatedApply.h"
+#include "gpopt/xforms/CXformLeftOuterJoin2BitmapIndexGetApply.h"
 #include "gpopt/xforms/CXformLeftOuterJoin2IndexGetApply.h"
 #include "gpopt/xforms/CXformLeftOuterApply2LeftOuterJoin.h"
 #include "gpopt/xforms/CXformLeftOuterApply2LeftOuterJoinNoCorrelations.h"

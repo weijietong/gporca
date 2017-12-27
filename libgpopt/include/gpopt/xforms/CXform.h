@@ -115,6 +115,7 @@ namespace gpopt
 				ExfLeftAntiSemiApplyNotIn2LeftAntiSemiJoinNotInNoCorrelations,
 				ExfPushDownLeftOuterJoin,
 				ExfSimplifyLeftOuterJoin,
+				ExfLeftOuterJoin2BitmapIndexGetApply,
 				ExfLeftOuterJoin2IndexGetApply,
 				ExfImplementLeftOuterIndexApply,
 				ExfLeftOuterJoin2NLJoin,

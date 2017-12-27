@@ -77,6 +77,7 @@ CLogicalLeftOuterJoin::PxfsCandidates
 
 	(void) pxfs->FExchangeSet(CXform::ExfPushDownLeftOuterJoin);
 	(void) pxfs->FExchangeSet(CXform::ExfSimplifyLeftOuterJoin);
+	(void) pxfs->FExchangeSet(CXform::ExfLeftOuterJoin2BitmapIndexGetApply);
 	(void) pxfs->FExchangeSet(CXform::ExfLeftOuterJoin2IndexGetApply);
 	(void) pxfs->FExchangeSet(CXform::ExfLeftOuterJoin2NLJoin);
 	(void) pxfs->FExchangeSet(CXform::ExfLeftOuterJoin2HashJoin);

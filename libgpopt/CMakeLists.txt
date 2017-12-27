@@ -772,6 +772,8 @@ add_library(gpopt
             src/xforms/CXformInnerJoin2IndexApply.cpp
             include/gpopt/xforms/CXformInnerJoin2IndexGetApply.h
             src/xforms/CXformInnerJoin2IndexGetApply.cpp
+            include/gpopt/xforms/CXformLeftOuterJoin2BitmapIndexGetApply.h
+            src/xforms/CXformLeftOuterJoin2BitmapIndexGetApply.cpp
             include/gpopt/xforms/CXformLeftOuterJoin2IndexGetApply.h
             src/xforms/CXformLeftOuterJoin2IndexGetApply.cpp
             include/gpopt/xforms/CXformInnerJoin2NLJoin.h
