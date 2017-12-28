@@ -361,6 +361,17 @@ CPhysicalJoin::PdsDerive
 		pdsInner->AddRef();
 		return pdsInner;
 	}
+	else if (CDistributionSpec::EdtHashed == pdsOuter->Edt() &&
+			CDistributionSpec::EdtHashed == pdsInner->Edt() &&
+			(CUtils::FPhysicalInnerJoin(exprhdl.Pop()) ||
+					CUtils::FPhysicalOuterJoin(exprhdl.Pop())))
+	{
+		CDistributionSpecHashed *pdsOuterHashed = CDistributionSpecHashed::PdsConvert(pdsOuter);
+		CDistributionSpecHashed *pdsInnerHashed = CDistributionSpecHashed::PdsConvert(pdsInner);
+		pdsInnerHashed->SetHashedEquiv(pdsOuterHashed);
+		pdsInnerHashed->AddRef();
+		return pdsInnerHashed;
+	}
 
 	// otherwise, return outer distribution
 	pdsOuter->AddRef();
