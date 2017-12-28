@@ -117,6 +117,8 @@ namespace gpopt
 				ExfSimplifyLeftOuterJoin,
 				ExfLeftOuterJoin2BitmapIndexGetApply,
 				ExfLeftOuterJoin2IndexGetApply,
+				ExfLeftOuterJoinWithInnerSelect2BitmapIndexGetApply,
+				ExfLeftOuterJoinWithInnerSelect2IndexGetApply,
 				ExfImplementLeftOuterIndexApply,
 				ExfLeftOuterJoin2NLJoin,
 				ExfLeftOuterJoin2HashJoin,

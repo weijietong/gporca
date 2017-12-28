@@ -191,6 +191,8 @@ CXformFactory::Instantiate()
 	Add(GPOS_NEW(m_pmp) CXformSimplifyLeftOuterJoin (m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoin2BitmapIndexGetApply(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoin2IndexGetApply(m_pmp));
+	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoinWithInnerSelect2BitmapIndexGetApply(m_pmp));
+	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoinWithInnerSelect2IndexGetApply(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformImplementLeftOuterIndexApply(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoin2NLJoin(m_pmp));
 	Add(GPOS_NEW(m_pmp) CXformLeftOuterJoin2HashJoin(m_pmp));
