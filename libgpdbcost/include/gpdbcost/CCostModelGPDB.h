@@ -179,6 +179,10 @@ namespace gpdbcost
 			static
 			CCost CostInnerIndexNLJoin(IMemoryPool *pmp, CExpressionHandle &exprhdl, const CCostModelGPDB *pcmgpdb, const SCostingInfo *pci);
 
+			// cost of left outer index-nljoin
+			static
+			CCost CostLeftOuterIndexNLJoin(IMemoryPool *pmp, CExpressionHandle &exprhdl, const CCostModelGPDB *pcmgpdb, const SCostingInfo *pci);
+
 			// cost of motion
 			static
 			CCost CostMotion(IMemoryPool *pmp, CExpressionHandle &exprhdl, const CCostModelGPDB *pcmgpdb, const SCostingInfo *pci);

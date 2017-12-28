@@ -74,7 +74,7 @@ const CCostModelGPDB::SCostMapping CCostModelGPDB::m_rgcm[] =
 	{COperator::EopPhysicalLeftOuterHashJoin, CostHashJoin},
 
 	{COperator::EopPhysicalInnerIndexNLJoin, CostInnerIndexNLJoin},
-	{COperator::EopPhysicalLeftOuterIndexNLJoin, CostInnerIndexNLJoin},
+	{COperator::EopPhysicalLeftOuterIndexNLJoin, CostLeftOuterIndexNLJoin},
 
 	{COperator::EopPhysicalMotionGather, CostMotion},
 	{COperator::EopPhysicalMotionBroadcast, CostMotion},
@@ -957,7 +957,7 @@ CCostModelGPDB::CostInnerIndexNLJoin
 {
 	GPOS_ASSERT(NULL != pcmgpdb);
 	GPOS_ASSERT(NULL != pci);
-//	GPOS_ASSERT	(COperator::EopPhysicalInnerIndexNLJoin == exprhdl.Pop()->Eopid());
+	GPOS_ASSERT	(COperator::EopPhysicalInnerIndexNLJoin == exprhdl.Pop()->Eopid());
 
 	const DOUBLE dRowsOuter = pci->PdRows()[0];
 	const DOUBLE dWidthOuter = pci->PdWidth()[0];
@@ -1001,6 +1001,54 @@ CCostModelGPDB::CostInnerIndexNLJoin
 	}
 
 	return CCost(ulPenalizationFactor * (costLocal + costChild));
+}
+
+CCost
+CCostModelGPDB::CostLeftOuterIndexNLJoin
+	(
+	IMemoryPool *pmp,
+	CExpressionHandle &exprhdl,
+	const CCostModelGPDB *pcmgpdb,
+	const SCostingInfo *pci
+	)
+{
+	GPOS_ASSERT(NULL != pcmgpdb);
+	GPOS_ASSERT(NULL != pci);
+	GPOS_ASSERT	(COperator::EopPhysicalLeftOuterIndexNLJoin == exprhdl.Pop()->Eopid());
+
+	const DOUBLE dRowsOuter = pci->PdRows()[0];
+	const DOUBLE dWidthOuter = pci->PdWidth()[0];
+
+	const CDouble dJoinFeedingTupColumnCostUnit = pcmgpdb->Pcp()->PcpLookup(CCostModelParamsGPDB::EcpJoinFeedingTupColumnCostUnit)->DVal();
+	const CDouble dJoinFeedingTupWidthCostUnit = pcmgpdb->Pcp()->PcpLookup(CCostModelParamsGPDB::EcpJoinFeedingTupWidthCostUnit)->DVal();
+	const CDouble dJoinOutputTupCostUnit = pcmgpdb->Pcp()->PcpLookup(CCostModelParamsGPDB::EcpJoinOutputTupCostUnit)->DVal();
+	GPOS_ASSERT(0 < dJoinFeedingTupColumnCostUnit);
+	GPOS_ASSERT(0 < dJoinFeedingTupWidthCostUnit);
+	GPOS_ASSERT(0 < dJoinOutputTupCostUnit);
+
+	// get the number of columns used in join condition
+	CExpression *pexprJoinCond= exprhdl.PexprScalarChild(2);
+	CColRefSet *pcrsUsed = CDrvdPropScalar::Pdpscalar(pexprJoinCond->PdpDerive())->PcrsUsed();
+	const ULONG ulColsUsed = pcrsUsed->CElements();
+
+	// cost of Index apply contains three parts:
+	// 1. feeding outer tuples. This part is correlated with rows and width of outer tuples
+	// and the number of columns used.
+	// 2. repetitive index scan of inner side for each feeding tuple. This part of cost is
+	// calculated and counted in its index scan child node.
+	// 3. output tuples. This part is correlated with outer rows and width of the join result.
+	CCost costLocal = CCost(pci->DRebinds() * (
+		// cost of feeding outer tuples
+		ulColsUsed * dRowsOuter * dJoinFeedingTupColumnCostUnit
+			+ dWidthOuter * dRowsOuter * dJoinFeedingTupWidthCostUnit
+		+
+		// cost of output tuples
+		pci->DRows() * pci->DWidth() * dJoinOutputTupCostUnit
+		));
+
+	CCost costChild = CostChildren(pmp, exprhdl, pci, pcmgpdb->Pcp());
+
+	return CCost(costLocal + costChild);
 }
 
 
