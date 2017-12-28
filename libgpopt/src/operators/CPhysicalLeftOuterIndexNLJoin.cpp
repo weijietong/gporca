@@ -1,12 +1,8 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2013 Greenplum, Inc.
+//	Copyright (C) 2017 Greenplum, Inc.
 //
-//	@filename:
-//		CPhysicalLeftOuterIndexNLJoin.cpp
-//
-//	@doc:
-//		Implementation of index inner nested-loops join operator
+//	Implementation of index inner nested-loops join operator
 //---------------------------------------------------------------------------
 
 #include "gpos/base.h"
@@ -17,23 +13,10 @@
 #include "gpopt/base/CDistributionSpecAny.h"
 #include "gpopt/operators/CExpressionHandle.h"
 #include "gpopt/operators/CPredicateUtils.h"
-
-
 #include "gpopt/operators/CPhysicalLeftOuterIndexNLJoin.h"
-
-
 
 using namespace gpopt;
 
-
-//---------------------------------------------------------------------------
-//	@function:
-//		CPhysicalLeftOuterIndexNLJoin::CPhysicalLeftOuterIndexNLJoin
-//
-//	@doc:
-//		Ctor
-//
-//---------------------------------------------------------------------------
 CPhysicalLeftOuterIndexNLJoin::CPhysicalLeftOuterIndexNLJoin
 	(
 	IMemoryPool *pmp,
@@ -47,28 +30,12 @@ CPhysicalLeftOuterIndexNLJoin::CPhysicalLeftOuterIndexNLJoin
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CPhysicalLeftOuterIndexNLJoin::~CPhysicalLeftOuterIndexNLJoin
-//
-//	@doc:
-//		Dtor
-//
-//---------------------------------------------------------------------------
 CPhysicalLeftOuterIndexNLJoin::~CPhysicalLeftOuterIndexNLJoin()
 {
 	m_pdrgpcrOuterRefs->Release();
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CPhysicalLeftOuterIndexNLJoin::FMatch
-//
-//	@doc:
-//		Match function
-//
-//---------------------------------------------------------------------------
 BOOL
 CPhysicalLeftOuterIndexNLJoin::FMatch
 	(
@@ -85,14 +52,6 @@ CPhysicalLeftOuterIndexNLJoin::FMatch
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CPhysicalLeftOuterIndexNLJoin::PdsRequired
-//
-//	@doc:
-//		Compute required distribution of the n-th child;
-//
-//---------------------------------------------------------------------------
 CDistributionSpec *
 CPhysicalLeftOuterIndexNLJoin::PdsRequired
 	(

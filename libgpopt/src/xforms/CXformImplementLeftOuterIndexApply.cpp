@@ -1,12 +1,8 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2013 EMC Corp.
+//	Copyright (C) 2017 Pivotal Software, Inc.
 //
-//	@filename:
-//		CXformImplementLeftOuterIndexApply.cpp
-//
-//	@doc:
-//		Implementation of Inner Index Apply operator
+//	Implementation of Left Outer Index Apply operator
 //---------------------------------------------------------------------------
 
 #include "gpos/base.h"
@@ -17,14 +13,6 @@
 using namespace gpopt;
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CXformImplementLeftOuterIndexApply::CXformImplementLeftOuterIndexApply
-//
-//	@doc:
-//		Ctor
-//
-//---------------------------------------------------------------------------
 CXformImplementLeftOuterIndexApply::CXformImplementLeftOuterIndexApply
 	(
 	IMemoryPool *pmp
@@ -45,14 +33,6 @@ CXformImplementLeftOuterIndexApply::CXformImplementLeftOuterIndexApply
 {}
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CXformImplementLeftOuterIndexApply::Transform
-//
-//	@doc:
-//		Actual transformation
-//
-//---------------------------------------------------------------------------
 void
 CXformImplementLeftOuterIndexApply::Transform
 	(

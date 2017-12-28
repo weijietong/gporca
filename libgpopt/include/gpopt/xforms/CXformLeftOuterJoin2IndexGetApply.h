@@ -1,32 +1,20 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2014 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CXformLeftOuterJoin2IndexGetApply.h
-//
-//	@doc:
-//		Transform Inner Join to IndexGet Apply
+//	Transform left outer Join to IndexGet Apply
 //---------------------------------------------------------------------------
 #ifndef GPOPT_CXformLeftOuterJoin2IndexGetApply_H
 #define GPOPT_CXformLeftOuterJoin2IndexGetApply_H
 
 #include "gpos/base.h"
-#include "gpopt/xforms/CXformInnerJoin2IndexApply.h"
+#include "gpopt/xforms/CXformLeftOuterJoin2IndexApply.h"
 
 namespace gpopt
 {
 	using namespace gpos;
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CXformLeftOuterJoin2IndexGetApply
-	//
-	//	@doc:
-	//		Transform Inner Join to IndexGet Apply
-	//
-	//---------------------------------------------------------------------------
-	class CXformLeftOuterJoin2IndexGetApply : public CXformInnerJoin2IndexApply
+	class CXformLeftOuterJoin2IndexGetApply : public CXformLeftOuterJoin2IndexApply
 	{
 
 		private:

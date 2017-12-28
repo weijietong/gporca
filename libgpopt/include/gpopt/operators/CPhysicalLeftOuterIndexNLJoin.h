@@ -1,12 +1,8 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2013 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CPhysicalLeftOuterIndexNLJoin.h
-//
-//	@doc:
-//		Inner index nested-loops join operator
+//	Left outer index nested-loops join operator
 //---------------------------------------------------------------------------
 #ifndef GPOPT_CPhysicalLeftOuterIndexNLJoin_H
 #define GPOPT_CPhysicalLeftOuterIndexNLJoin_H
@@ -17,14 +13,6 @@
 namespace gpopt
 {
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CPhysicalLeftOuterIndexNLJoin
-	//
-	//	@doc:
-	//		Inner index nested-loops join operator
-	//
-	//---------------------------------------------------------------------------
 	class CPhysicalLeftOuterIndexNLJoin : public CPhysicalLeftOuterNLJoin
 	{
 

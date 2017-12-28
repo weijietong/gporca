@@ -1,12 +1,8 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2013 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CXformImplementLeftOuterIndexApply.h
-//
-//	@doc:
-//		Implementing Inner Index Apply
+//	Implementing Left Outer Index Apply
 //---------------------------------------------------------------------------
 #ifndef GPOPT_CXformImplementLeftOuterIndexApply_H
 #define GPOPT_CXformImplementLeftOuterIndexApply_H
@@ -19,14 +15,6 @@ namespace gpopt
 {
 	using namespace gpos;
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CXformImplementLeftOuterIndexApply
-	//
-	//	@doc:
-	//		Implement Inner Index Apply
-	//
-	//---------------------------------------------------------------------------
 	class CXformImplementLeftOuterIndexApply : public CXformImplementation
 	{
 
@@ -34,7 +22,6 @@ namespace gpopt
 
 			// private copy ctor
 			CXformImplementLeftOuterIndexApply(const CXformImplementLeftOuterIndexApply &);
-
 
 		public:
 

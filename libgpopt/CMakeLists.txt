@@ -65,6 +65,8 @@ add_library(gpopt
             include/gpopt/xforms/CXformInnerJoinAntiSemiJoinNotInSwap.h
             include/gpopt/xforms/CXformInnerJoinAntiSemiJoinSwap.h
             include/gpopt/xforms/CXformInnerJoinSemiJoinSwap.h
+            include/gpopt/xforms/CXformInnerJoin2IndexApply.h
+            include/gpopt/xforms/CXformLeftOuterJoin2IndexApply.h
             include/gpopt/xforms/CXformJoinSwap.h
             include/gpopt/xforms/CXformLeftAntiSemiJoinNotIn2CrossProduct.h
             include/gpopt/xforms/CXformLeftSemiApplyIn2LeftSemiJoin.h
@@ -768,8 +770,8 @@ add_library(gpopt
             src/xforms/CXformInnerJoin2DynamicIndexGetApply.cpp
             include/gpopt/xforms/CXformInnerJoin2HashJoin.h
             src/xforms/CXformInnerJoin2HashJoin.cpp
-            include/gpopt/xforms/CXformInnerJoin2IndexApply.h
-            src/xforms/CXformInnerJoin2IndexApply.cpp
+            include/gpopt/xforms/CXformJoin2IndexApply.h
+            src/xforms/CXformJoin2IndexApply.cpp
             include/gpopt/xforms/CXformInnerJoin2IndexGetApply.h
             src/xforms/CXformInnerJoin2IndexGetApply.cpp
             include/gpopt/xforms/CXformLeftOuterJoin2BitmapIndexGetApply.h

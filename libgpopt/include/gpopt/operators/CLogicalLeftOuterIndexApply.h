@@ -1,15 +1,11 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2013 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CLogicalLeftOuterIndexApply.h
-//
-//	@doc:
-//		Inner Index Apply operator;
-//		a variant of inner apply that captures the need to implement a
-//		correlated-execution strategy on the physical side, where the inner
-//		side is an index scan with parameters from outer side
+//	Left Outer Index Apply operator;
+//	a variant of inner apply that captures the need to implement a
+//	correlated-execution strategy on the physical side, where the inner
+//	side is an index scan with parameters from outer side
 //---------------------------------------------------------------------------
 #ifndef GPOPT_CLogicalLeftOuterIndexApply_H
 #define GPOPT_CLogicalLeftOuterIndexApply_H
@@ -21,15 +17,6 @@
 namespace gpopt
 {
 
-
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CLogicalLeftOuterIndexApply
-	//
-	//	@doc:
-	//		Index Apply operator
-	//
-	//---------------------------------------------------------------------------
 	class CLogicalLeftOuterIndexApply : public CLogicalApply
 	{
 

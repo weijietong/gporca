@@ -1,18 +1,9 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2015 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CXformLeftOuterJoinWithInnerSelect2BitmapIndexGetApply.h
-//
-//	@doc:
-//		Transform Left Outer Join with a Select on the inner branch to
-//		Bitmap IndexGet Apply
-//
-//	@owner:
-//		n
-//
-//	@test:
+//	Transform Left Outer Join with a Select on the inner branch to
+//	Bitmap IndexGet Apply
 //
 //---------------------------------------------------------------------------
 
@@ -20,22 +11,13 @@
 #define GPOPT_CXformLeftOuterJoinWithInnerSelect2BitmapIndexGetApply_H
 
 #include "gpos/base.h"
-#include "gpopt/xforms/CXformInnerJoin2IndexApply.h"
+#include "gpopt/xforms/CXformLeftOuterJoin2IndexApply.h"
 
 namespace gpopt
 {
 	using namespace gpos;
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CXformLeftOuterJoinWithInnerSelect2BitmapIndexGetApply
-	//
-	//	@doc:
-	//		Transform Inner Join with a Select on the inner branch to
-	//		Bitmap IndexGet Apply
-	//
-	//---------------------------------------------------------------------------
-	class CXformLeftOuterJoinWithInnerSelect2BitmapIndexGetApply : public CXformInnerJoin2IndexApply
+	class CXformLeftOuterJoinWithInnerSelect2BitmapIndexGetApply : public CXformLeftOuterJoin2IndexApply
 	{
 		private:
 			// private copy ctor

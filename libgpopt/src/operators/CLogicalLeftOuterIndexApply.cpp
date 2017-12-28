@@ -1,12 +1,8 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2013 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CLogicalLeftOuterIndexApply.cpp
-//
-//	@doc:
-//		Implementation of index apply operator
+//	Implementation of left outer index apply operator
 //---------------------------------------------------------------------------
 
 #include "gpos/base.h"
@@ -17,14 +13,6 @@
 
 using namespace gpopt;
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::CLogicalLeftOuterIndexApply
-//
-//	@doc:
-//		Ctor - for patterns
-//
-//---------------------------------------------------------------------------
 CLogicalLeftOuterIndexApply::CLogicalLeftOuterIndexApply
 	(
 	IMemoryPool *pmp
@@ -36,14 +24,6 @@ CLogicalLeftOuterIndexApply::CLogicalLeftOuterIndexApply
 	m_fPattern = true;
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::CLogicalLeftOuterIndexApply
-//
-//	@doc:
-//		Ctor
-//
-//---------------------------------------------------------------------------
 CLogicalLeftOuterIndexApply::CLogicalLeftOuterIndexApply
 	(
 	IMemoryPool *pmp,
@@ -57,28 +37,12 @@ CLogicalLeftOuterIndexApply::CLogicalLeftOuterIndexApply
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::~CLogicalLeftOuterIndexApply
-//
-//	@doc:
-//		Dtor
-//
-//---------------------------------------------------------------------------
 CLogicalLeftOuterIndexApply::~CLogicalLeftOuterIndexApply()
 {
 	CRefCount::SafeRelease(m_pdrgpcrOuterRefs);
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::Maxcard
-//
-//	@doc:
-//		Derive max card
-//
-//---------------------------------------------------------------------------
 CMaxCard
 CLogicalLeftOuterIndexApply::Maxcard
 	(
@@ -91,14 +55,6 @@ CLogicalLeftOuterIndexApply::Maxcard
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::PxfsCandidates
-//
-//	@doc:
-//		Get candidate xforms
-//
-//---------------------------------------------------------------------------
 CXformSet *
 CLogicalLeftOuterIndexApply::PxfsCandidates
 	(
@@ -112,14 +68,6 @@ CLogicalLeftOuterIndexApply::PxfsCandidates
 	return pxfs;
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::FMatch
-//
-//	@doc:
-//		Match function
-//
-//---------------------------------------------------------------------------
 BOOL
 CLogicalLeftOuterIndexApply::FMatch
 	(
@@ -138,14 +86,6 @@ CLogicalLeftOuterIndexApply::FMatch
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::PopCopyWithRemappedColumns
-//
-//	@doc:
-//		Return a copy of the operator with remapped columns
-//
-//---------------------------------------------------------------------------
 COperator *
 CLogicalLeftOuterIndexApply::PopCopyWithRemappedColumns
 	(
@@ -160,14 +100,6 @@ CLogicalLeftOuterIndexApply::PopCopyWithRemappedColumns
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CLogicalLeftOuterIndexApply::PstatsDerive
-//
-//	@doc:
-//		Derive statistics
-//
-//---------------------------------------------------------------------------
 IStatistics *
 CLogicalLeftOuterIndexApply::PstatsDerive
 	(

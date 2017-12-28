@@ -1,12 +1,8 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2014 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CXformLeftOuterJoin2IndexGetApply.cpp
-//
-//	@doc:
-//		Transform Inner Join to IndexGet Apply
+//	Transform left outer Join to IndexGet Apply
 //---------------------------------------------------------------------------
 
 #include "gpos/base.h"
@@ -18,21 +14,13 @@
 using namespace gpopt;
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CXformLeftOuterJoin2IndexGetApply::CXformLeftOuterJoin2IndexGetApply
-//
-//	@doc:
-//		Ctor
-//
-//---------------------------------------------------------------------------
 CXformLeftOuterJoin2IndexGetApply::CXformLeftOuterJoin2IndexGetApply
 	(
 	IMemoryPool *pmp
 	)
 	:
 	// pattern
-	CXformInnerJoin2IndexApply
+	CXformLeftOuterJoin2IndexApply
 		(
 		GPOS_NEW(pmp) CExpression
 				(
@@ -45,14 +33,6 @@ CXformLeftOuterJoin2IndexGetApply::CXformLeftOuterJoin2IndexGetApply
 		)
 {}
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CXformLeftOuterJoin2IndexGetApply::Transform
-//
-//	@doc:
-//		Actual transformation
-//
-//---------------------------------------------------------------------------
 void
 CXformLeftOuterJoin2IndexGetApply::Transform
 	(

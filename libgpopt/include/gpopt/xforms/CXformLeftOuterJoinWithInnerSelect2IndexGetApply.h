@@ -1,17 +1,8 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2014 Pivotal, Inc.
+//	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CXformLeftOuterJoinWithInnerSelect2IndexGetApply.h
-//
-//	@doc:
-//		Transform Inner Join with Select on the inner branch to IndexGet Apply
-//
-//	@owner:
-//		n
-//
-//	@test:
+//	Transform left outer Join with Select on the inner branch to IndexGet Apply
 //
 //---------------------------------------------------------------------------
 
@@ -19,21 +10,13 @@
 #define GPOPT_CXformLeftOuterJoinWithInnerSelect2IndexGetApply_H
 
 #include "gpos/base.h"
-#include "gpopt/xforms/CXformInnerJoin2IndexApply.h"
+#include "gpopt/xforms/CXformLeftOuterJoin2IndexApply.h"
 
 namespace gpopt
 {
 	using namespace gpos;
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CXformLeftOuterJoinWithInnerSelect2IndexGetApply
-	//
-	//	@doc:
-	//		Transform Inner Join with Select on the inner branch to IndexGet Apply
-	//
-	//---------------------------------------------------------------------------
-	class CXformLeftOuterJoinWithInnerSelect2IndexGetApply : public CXformInnerJoin2IndexApply
+	class CXformLeftOuterJoinWithInnerSelect2IndexGetApply : public CXformLeftOuterJoin2IndexApply
 	{
 		private:
 			// private copy ctor
